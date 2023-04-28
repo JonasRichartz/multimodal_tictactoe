@@ -1,7 +1,6 @@
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
 
@@ -48,7 +47,6 @@ public class TicTacToe implements ActionListener{
     boolean turn_x; //bool to determine player of current turn
     boolean game_over; //bool to determine if game has ended
     boolean computerPlaying = false; // bool to determine gamemode - 1 vs 1 or 1 vs Computer
-    //boolean turn_computer = false; //bool to determine if Computer has to play
 
 
     TicTacToe(){
@@ -381,8 +379,6 @@ public class TicTacToe implements ActionListener{
     public void computerMove() {
         //so far, the computer just plays a random move
         //TODO improve quality Computer moves
-        //turn_computer = true;
-
         if(turn_x){
             playRandomMove();
             label_turn.setText("O's turn");
@@ -398,7 +394,6 @@ public class TicTacToe implements ActionListener{
             turn_x = true;
             symbol = "X";
         }
-        //turn_computer = false;
     }
 
     public void playRandomMove() {
