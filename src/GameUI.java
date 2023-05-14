@@ -1,10 +1,10 @@
-import java.awt.*;
-import java.awt.event.*;
-import java.util.*;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-public class TicTacToe implements ActionListener{
+public class GameUI implements ActionListener {
 
     JFrame frame = new JFrame();
 
@@ -39,17 +39,16 @@ public class TicTacToe implements ActionListener{
     ImageIcon icon_speechInput = new ImageIcon("src/Icons/icons8-microphone-60.png");
     ImageIcon icon_player = new ImageIcon("src/Icons/icons8-monitor-50.png");
 
-
     AudioPlayer audioPlayer = new AudioPlayer();
 
-    Random random = new Random();
-    String symbol = "";
-    boolean turn_x; //bool to determine player of current turn
-    boolean game_over; //bool to determine if game has ended
-    boolean computerPlaying = false; // bool to determine gamemode - 1 vs 1 or 1 vs Computer
+    GameController controller;
 
+    GameUI(GameController gameController){
+        controller = gameController;
+        renderUI();
+    }
 
-    TicTacToe(){
+    private void renderUI() {
         //-------------------------------------------------define GUI------------------------------------------------//
         //frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -191,32 +190,6 @@ public class TicTacToe implements ActionListener{
         frame.add(panel_west,BorderLayout.WEST);
         frame.add(panel_center,BorderLayout.CENTER);
 
-        //start the game
-        firstTurn();
-    }
-    
-    //----------------------- END OF GUI-----------------------------------------------------------------------------//
-
-    public void firstTurn() {
-        //give random player first turn
-        game_over = false;
-        if(random.nextBoolean()) {
-            turn_x = true;
-            symbol = "X";
-            label_turn.setText("X begins");
-            label_turn.setForeground(custom_red);
-            if(button_player.getBackground() == custom_red){
-                computerMove();
-            }
-        } else {
-            turn_x = false;
-            symbol = "O";
-            label_turn.setForeground(custom_blue);
-            label_turn.setText("O begins");
-            if(button_player.getBackground() == custom_blue){
-                computerMove();
-            }
-        }
     }
 
     @Override
@@ -225,19 +198,14 @@ public class TicTacToe implements ActionListener{
         //tictactoe button clicked
         for (JButton jButton : buttons) {
             if (actionEvent.getSource() == jButton) {
-                if (turn_x) {
+                if (controller.turn_x) {
                     if (jButton.getText().equals("")) {
                         jButton.setForeground(custom_red);
                         jButton.setText("X");
                         label_turn.setText("O's turn");
                         label_turn.setForeground(custom_blue);
                         audioPlayer.playSound("src/Audio/Cross.wav");
-                        check();
-                        turn_x = false;
-                        symbol = "O";
-                        if(!game_over && computerPlaying) {
-                            computerMove();
-                        }
+                        controller.moveMade();
                     }
                 } else {
                     if (jButton.getText().equals("")) {
@@ -246,14 +214,10 @@ public class TicTacToe implements ActionListener{
                         label_turn.setText("X's turn");
                         label_turn.setForeground(custom_red);
                         audioPlayer.playSound("src/Audio/Circle.wav");
-                        check();
-                        turn_x = true;
-                        symbol = "X";
-                        if(!game_over && computerPlaying) {
-                            computerMove();
-                        }
+                        controller.moveMade();
                     }
                 }
+                break;
             }
         }
 
@@ -265,7 +229,7 @@ public class TicTacToe implements ActionListener{
                 button.setEnabled(true);
             }
             audioPlayer.playSound("src/Audio/Button.wav");
-            firstTurn();
+            controller.firstTurn();
         }
 
         //" speechInput" button clicked
@@ -283,19 +247,19 @@ public class TicTacToe implements ActionListener{
             audioPlayer.playSound("src/Audio/Button.wav");
             if(button_player.getBackground() == custom_lightGray) {
                 button_player.setBackground(custom_red);
-                computerPlaying = true;
-                if(turn_x && !game_over){
-                    computerMove();
+                controller.computerPlaying = true;
+                if(controller.turn_x && !controller.game_over){
+                    controller.computerMove();
                 }
             }else if(button_player.getBackground() == custom_red){
                 button_player.setBackground(custom_blue);
-                computerPlaying = true;
-                if(!turn_x && !game_over){
-                    computerMove();
+                controller.computerPlaying = true;
+                if(!controller.turn_x && !controller.game_over){
+                    controller.computerMove();
                 }
             }else{
                 button_player.setBackground(custom_lightGray);
-                computerPlaying = false;
+                controller.computerPlaying = false;
             }
         }
 
@@ -304,54 +268,13 @@ public class TicTacToe implements ActionListener{
             audioPlayer.playSound("src/Audio/Button.wav");
         }
     }
-    
-    public void check() {
-        //calculate if game is won
-        if ((buttons[0].getText().equals(symbol)) && (buttons[1].getText().equals(symbol)) && (buttons[2].getText().equals(symbol))) {
-            gameWon(0,1,2);
-        }
-        if ((buttons[3].getText().equals(symbol)) && (buttons[4].getText().equals(symbol)) && (buttons[5].getText().equals(symbol))) {
-            gameWon(3,4,5);
-        }
-        if ((buttons[6].getText().equals(symbol)) && (buttons[7].getText().equals(symbol)) && (buttons[8].getText().equals(symbol))) {
-            gameWon(6,7,8);
-        }
-        if ((buttons[0].getText().equals(symbol)) && (buttons[3].getText().equals(symbol)) && (buttons[6].getText().equals(symbol))) {
-            gameWon(0,3,6);
-        }
-        if ((buttons[1].getText().equals(symbol)) && (buttons[4].getText().equals(symbol)) && (buttons[7].getText().equals(symbol))) {
-            gameWon(1,4,7);
-        }
-        if ((buttons[2].getText().equals(symbol)) && (buttons[5].getText().equals(symbol)) && (buttons[8].getText().equals(symbol))) {
-            gameWon(2,5,8);
-        }
-        if ((buttons[0].getText().equals(symbol)) && (buttons[4].getText().equals(symbol)) && (buttons[8].getText().equals(symbol))) {
-            gameWon(0,4,8);
-        }
-        if ((buttons[2].getText().equals(symbol)) && (buttons[4].getText().equals(symbol)) && (buttons[6].getText().equals(symbol))) {
-            gameWon(2,4,6);
-        }
-
-        //calculate if game is a draw
-        int counter = 0;
-        for (JButton button : buttons) {
-            if (!button.getText().equals("")) {
-                counter++;
-            }
-        }
-        if (counter == 9 && !game_over){
-            gameDrawn();
-        }
-    }
 
     public void gameWon(int a, int b, int c) {
         //stops game if a player has won the game
-        game_over = true;
-
         for(int i=0;i<9;i++) {
             buttons[i].setEnabled(false);
         }
-        if(turn_x) {
+        if(controller.turn_x) {
             label_turn.setText("X-treme victory");
             label_turn.setForeground(custom_red);
             buttons[a].setBackground(custom_red);
@@ -371,49 +294,7 @@ public class TicTacToe implements ActionListener{
             button.setEnabled(false);
             button.setBackground(custom_green);
         }
-        game_over = true;
         label_turn.setText("Draw");
         label_turn.setForeground(custom_green);
-    }
-    
-    public void computerMove() {
-        //so far, the computer just plays a random move
-        //TODO improve quality Computer moves
-        if(turn_x){
-            playRandomMove();
-            label_turn.setText("O's turn");
-            label_turn.setForeground(custom_blue);
-            check();
-            turn_x = false;
-            symbol = "O";
-        }else{
-            playRandomMove();
-            label_turn.setText("X's turn");
-            label_turn.setForeground(custom_red);
-            check();
-            turn_x = true;
-            symbol = "X";
-        }
-    }
-
-    public void playRandomMove() {
-        //Plays a random move - used for playing against computer
-        JButton[] candidates = new JButton[9];
-        int candidates_counter = 0;
-        for (JButton button : buttons) {
-            if (button.getText().equals("")) {
-                candidates[candidates_counter] = button;
-                candidates_counter++;
-            }
-        }
-        int buttonNr = random.nextInt(candidates_counter);
-        candidates[buttonNr].setText(symbol);
-        if(turn_x) {
-            candidates[buttonNr].setForeground(custom_red);
-            //audioPlayer.playSound("src/Audio/Cross.wav");
-        }else{
-            candidates[buttonNr].setForeground(custom_blue);
-            //audioPlayer.playSound("src/Audio/Circle.wav");
-        }
     }
 }
