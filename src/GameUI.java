@@ -53,7 +53,7 @@ public class GameUI implements ActionListener {
         //frame
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(650,650);
-        frame.getContentPane().setBackground(Color.GRAY);
+        frame.getContentPane().setBackground(custom_lightBlue);
         frame.setLayout(new BorderLayout());
         frame.setVisible(true);
         frame.setLocationRelativeTo(null);
