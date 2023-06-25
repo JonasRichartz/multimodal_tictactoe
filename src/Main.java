@@ -6,6 +6,7 @@ public class Main {
         GameController gameController = new GameController();
         GameUI gameUI = new GameUI( gameController );
         gameController.setGameUI(gameUI);
+        new GestureFrame();
         gameController.firstTurn();
     }
 }
