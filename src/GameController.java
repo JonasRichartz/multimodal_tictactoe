@@ -8,7 +8,7 @@ public class GameController implements ActionListener {
     boolean game_over; //bool to determine if game has ended
     String symbol = "";
     boolean turn_x; //bool to determine player of current turn
-    boolean computerPlaying = false; // bool to determine gamemode - 1 vs 1 or 1 vs Computer
+    boolean computerPlaying = false; // bool to determine game mode - 1 vs 1 or 1 vs Computer
     Random random = new Random();
 
     int[][] winConditions = {

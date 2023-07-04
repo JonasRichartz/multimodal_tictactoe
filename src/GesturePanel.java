@@ -11,6 +11,7 @@ public class GesturePanel extends JPanel {
         super.paintChildren(g);
         if (path != null) {
             Graphics2D g2d = (Graphics2D) g;
+            g2d.setStroke(new BasicStroke(3));
             g2d.draw(path);
         }
     }

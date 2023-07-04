@@ -18,11 +18,11 @@ public class GameUI implements ActionListener {
     JPanel panel_turn = new JPanel();
     JPanel panel_speechInput = new JPanel();
     JPanel panel_player = new JPanel();
-    JPanel panel_help = new JPanel();
+    JPanel panel_gestures = new JPanel();
 
     JButton[] buttons = new JButton[9];
     JButton button_reset = new JButton();
-    JButton button_help = new JButton();
+    JButton button_gestures = new JButton();
     JButton button_speechInput = new JButton();
     JButton button_player = new JButton();
 
@@ -38,13 +38,16 @@ public class GameUI implements ActionListener {
     ImageIcon icon_frame = new ImageIcon("src/Icons/icons8-tic-tac-toe-48.png");
     ImageIcon icon_speechInput = new ImageIcon("src/Icons/icons8-microphone-60.png");
     ImageIcon icon_player = new ImageIcon("src/Icons/icons8-monitor-50.png");
+    ImageIcon icon_gestures = new ImageIcon("src/Icons/icons8-hand-drag-50.png");
 
     AudioPlayer audioPlayer = new AudioPlayer();
 
     GameController controller;
+    GestureFrame gestureFrame;
 
-    GameUI(GameController gameController){
+    GameUI(GameController gameController, GestureFrame gFrame){
         controller = gameController;
+        gestureFrame = gFrame;
         renderUI();
     }
 
@@ -71,7 +74,7 @@ public class GameUI implements ActionListener {
         panel_turn.setBackground(custom_lightBlue);
         panel_speechInput.setBackground(custom_lightBlue);
         panel_player.setBackground(custom_lightBlue);
-        panel_help.setBackground(custom_lightBlue);
+        panel_gestures.setBackground(custom_lightBlue);
 
         panel_center.setBorder(new LineBorder(Color.BLACK, 5, false));
 
@@ -85,7 +88,7 @@ public class GameUI implements ActionListener {
         panel_turn.setPreferredSize(new Dimension(40,40));
         panel_speechInput.setPreferredSize(new Dimension(40,40));
         panel_player.setPreferredSize(new Dimension(40,40));
-        panel_help.setPreferredSize(new Dimension(40,40));
+        panel_gestures.setPreferredSize(new Dimension(40,40));
 
         panel_center.setLayout(new GridLayout(3,3,5,5));
         panel_north.setLayout(new GridLayout(2,1));
@@ -96,7 +99,7 @@ public class GameUI implements ActionListener {
         panel_turn.setLayout(new GridBagLayout());
         panel_speechInput.setLayout(new GridBagLayout());
         panel_player.setLayout(new GridBagLayout());
-        panel_help.setLayout(new GridBagLayout());
+        panel_gestures.setLayout(new GridBagLayout());
 
         //buttons
         button_reset.setFont(new Font("Comic Sans MS", Font.BOLD, 35));
@@ -130,22 +133,21 @@ public class GameUI implements ActionListener {
         button_player.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_player.setIcon(icon_player);
 
-        button_help.setFont(new Font("poornut", Font.BOLD, 60));
-        button_help.setText("?");
-        button_help.setBackground(custom_lightGray);
-        button_help.setForeground(Color.BLACK);
-        button_help.setFocusable(false);
-        button_help.setHorizontalAlignment(SwingConstants.CENTER);
-        button_help.setVerticalAlignment(SwingConstants.CENTER);
-        button_help.addActionListener(this);
-        button_help.setPreferredSize(new Dimension(75,75));
-        button_help.setBorder(new LineBorder(Color.BLACK, 3, false));
+        button_gestures.setBackground(custom_lightGray);
+        button_gestures.setForeground(Color.BLACK);
+        button_gestures.setFocusable(false);
+        button_gestures.setHorizontalAlignment(SwingConstants.CENTER);
+        button_gestures.setVerticalAlignment(SwingConstants.CENTER);
+        button_gestures.addActionListener(this);
+        button_gestures.setPreferredSize(new Dimension(75,75));
+        button_gestures.setBorder(new LineBorder(Color.BLACK, 3, false));
+        button_gestures.setIcon(icon_gestures);
 
         // add buttons to panel
         panel_south.add(button_reset, new GridBagConstraints());
         panel_speechInput.add(button_speechInput, new GridBagConstraints());
         panel_player.add(button_player, new GridBagConstraints());
-        panel_help.add(button_help, new GridBagConstraints());
+        panel_gestures.add(button_gestures, new GridBagConstraints());
 
         for(int i=0;i<9;i++) {
             buttons[i] = new JButton();
@@ -178,9 +180,9 @@ public class GameUI implements ActionListener {
         //add sub-panels to main-panels
         panel_north.add(panel_title);
         panel_north.add(panel_turn);
-        panel_east.add(panel_speechInput);
         panel_east.add(panel_player);
-        panel_east.add(panel_help);
+        panel_east.add(panel_speechInput);
+        panel_east.add(panel_gestures);
 
 
         //add panels to frame
@@ -263,9 +265,16 @@ public class GameUI implements ActionListener {
             }
         }
 
-        //"help" button clicked
-        if (actionEvent.getSource() == button_help) {
+        //"gesture" button clicked
+        if (actionEvent.getSource() == button_gestures) {
             audioPlayer.playSound("src/Audio/Button.wav");
+            if(button_gestures.getBackground() == custom_lightGray) {
+                button_gestures.setBackground(custom_green);
+                gestureFrame.setVisible(true);
+            }else{
+                button_gestures.setBackground(custom_lightGray);
+                gestureFrame.setVisible(false);
+            }
         }
     }
 

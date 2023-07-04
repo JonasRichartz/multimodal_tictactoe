@@ -4,9 +4,9 @@ public class Main {
         //TicTacToe tictactoe = new TicTacToe();
 
         GameController gameController = new GameController();
-        GameUI gameUI = new GameUI( gameController );
+        GestureFrame gestureFrame = new GestureFrame(gameController);
+        GameUI gameUI = new GameUI( gameController, gestureFrame );
         gameController.setGameUI(gameUI);
-        new GestureFrame();
         gameController.firstTurn();
     }
 }
