@@ -17,13 +17,18 @@ public class GameUI implements ActionListener {
     JPanel panel_title = new JPanel();
     JPanel panel_turn = new JPanel();
     JPanel panel_speechInput = new JPanel();
-    JPanel panel_player = new JPanel();
+    JPanel panel_mmiInput = new JPanel();
     JPanel panel_gestures = new JPanel();
+
+    JPanel panel_eastUp = new JPanel();
+    JPanel panel_player = new JPanel();
+    JPanel panel_eastDown = new JPanel();
 
     JButton[] buttons = new JButton[9];
     JButton button_reset = new JButton();
     JButton button_gestures = new JButton();
     JButton button_speechInput = new JButton();
+    JButton button_mmiInput = new JButton();
     JButton button_player = new JButton();
 
     JLabel label_turn = new JLabel();
@@ -44,10 +49,17 @@ public class GameUI implements ActionListener {
 
     GameController controller;
     GestureFrame gestureFrame;
+    MmiFrame mmiFrame;
 
-    GameUI(GameController gameController, GestureFrame gFrame){
+    Boolean mmi_active;
+
+    GameUI(GameController gameController, GestureFrame gFrame, MmiFrame mFrame){
         controller = gameController;
         gestureFrame = gFrame;
+        mmiFrame = mFrame;
+
+        mmi_active = false;
+
         renderUI();
     }
 
@@ -73,8 +85,11 @@ public class GameUI implements ActionListener {
         panel_title.setBackground(custom_lightBlue);
         panel_turn.setBackground(custom_lightBlue);
         panel_speechInput.setBackground(custom_lightBlue);
-        panel_player.setBackground(custom_lightBlue);
+        panel_mmiInput.setBackground(custom_lightBlue);
         panel_gestures.setBackground(custom_lightBlue);
+        panel_eastUp.setBackground(custom_lightBlue);
+        panel_player.setBackground(custom_lightBlue);
+        panel_eastDown.setBackground(custom_lightBlue);
 
         panel_center.setBorder(new LineBorder(Color.BLACK, 5, false));
 
@@ -87,19 +102,26 @@ public class GameUI implements ActionListener {
         panel_title.setPreferredSize(new Dimension(40,40));
         panel_turn.setPreferredSize(new Dimension(40,40));
         panel_speechInput.setPreferredSize(new Dimension(40,40));
-        panel_player.setPreferredSize(new Dimension(40,40));
+        panel_mmiInput.setPreferredSize(new Dimension(40,40));
         panel_gestures.setPreferredSize(new Dimension(40,40));
+        panel_eastUp.setPreferredSize(new Dimension(40,40));
+        panel_player.setPreferredSize(new Dimension(40,40));
+        panel_eastDown.setPreferredSize(new Dimension(40,40));
 
         panel_center.setLayout(new GridLayout(3,3,5,5));
         panel_north.setLayout(new GridLayout(2,1));
         panel_south.setLayout(new GridBagLayout());
         panel_east.setLayout(new GridLayout(3,1,10,10));
+        panel_west.setLayout(new GridLayout(3,1,10,10));
 
         panel_title.setLayout(new GridBagLayout());
         panel_turn.setLayout(new GridBagLayout());
         panel_speechInput.setLayout(new GridBagLayout());
-        panel_player.setLayout(new GridBagLayout());
+        panel_mmiInput.setLayout(new GridBagLayout());
         panel_gestures.setLayout(new GridBagLayout());
+        panel_eastUp.setLayout(new GridBagLayout());
+        panel_player.setLayout(new GridBagLayout());
+        panel_eastDown.setLayout(new GridBagLayout());
 
         //buttons
         button_reset.setFont(new Font("Comic Sans MS", Font.BOLD, 35));
@@ -143,10 +165,23 @@ public class GameUI implements ActionListener {
         button_gestures.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_gestures.setIcon(icon_gestures);
 
+        button_mmiInput.setBackground(custom_lightGray);
+        button_mmiInput.setForeground(Color.BLACK);
+        button_mmiInput.setFocusable(false);
+        button_mmiInput.setHorizontalAlignment(SwingConstants.CENTER);
+        button_mmiInput.setVerticalAlignment(SwingConstants.CENTER);
+        button_mmiInput.addActionListener(this);
+        button_mmiInput.setPreferredSize(new Dimension(75,75));
+        button_mmiInput.setBorder(new LineBorder(Color.BLACK, 3, false));
+        button_mmiInput.setFont(new Font("Comic Sans MS", Font.BOLD,30));
+        button_mmiInput.setText("MMI");
+        
+
         // add buttons to panel
         panel_south.add(button_reset, new GridBagConstraints());
-        panel_speechInput.add(button_speechInput, new GridBagConstraints());
         panel_player.add(button_player, new GridBagConstraints());
+        panel_speechInput.add(button_speechInput, new GridBagConstraints());
+        panel_mmiInput.add(button_mmiInput, new GridBagConstraints());
         panel_gestures.add(button_gestures, new GridBagConstraints());
 
         for(int i=0;i<9;i++) {
@@ -180,9 +215,12 @@ public class GameUI implements ActionListener {
         //add sub-panels to main-panels
         panel_north.add(panel_title);
         panel_north.add(panel_turn);
+        panel_west.add(panel_mmiInput);
+        panel_west.add(panel_speechInput);
+        panel_west.add(panel_gestures);
+        panel_east.add(panel_eastUp);
         panel_east.add(panel_player);
-        panel_east.add(panel_speechInput);
-        panel_east.add(panel_gestures);
+        panel_east.add(panel_eastDown);
 
 
         //add panels to frame
@@ -274,6 +312,30 @@ public class GameUI implements ActionListener {
             }else{
                 button_gestures.setBackground(custom_lightGray);
                 gestureFrame.setVisible(false);
+            }
+        }
+
+        //"Multimodal" button clicked
+        if (actionEvent.getSource() == button_mmiInput) {
+            audioPlayer.playSound("src/Audio/Button.wav");
+            if(button_mmiInput.getBackground() == custom_lightGray) {
+                mmi_active = true;
+                button_mmiInput.setBackground(custom_green);
+                button_gestures.setBackground(custom_lightGray); //disable other input types
+                button_speechInput.setBackground(custom_lightGray);
+                button_gestures.setEnabled(false);
+                button_speechInput.setEnabled(false);
+                gestureFrame.setVisible(true);
+                mmiFrame.setVisible(true);
+                //TODO: activate Voice Recognition
+            }else{
+                mmi_active = false;
+                button_mmiInput.setBackground(custom_lightGray);
+                button_gestures.setEnabled(true);
+                button_speechInput.setEnabled(true);
+                gestureFrame.setVisible(false);
+                mmiFrame.setVisible(false);
+                //TODO: deactivate Voice Recognition
             }
         }
     }

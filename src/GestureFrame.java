@@ -43,6 +43,7 @@ public class GestureFrame extends JFrame implements MouseInputListener {
         setLayout(new BorderLayout());
         setIconImage(icon_frame.getImage());
         setVisible(false);
+        //setLocation(200, 200);
         
         //panels
         panel_north.setBackground(custom_lightBlue);
@@ -126,69 +127,145 @@ public class GestureFrame extends JFrame implements MouseInputListener {
         //System.out.println("released");
         panel_inputArea.path.lineTo(e.getX(), e.getY());
         pathPoints.add(e.getPoint());
-        String debugText = "Identified Gesture: ";
+        String debugText = "Identified gesture: ";
 
         //interpret gesture
         if(pathPoints.size()<10) {
             debugText = "More input required";
         }else {
-            //execute dtw
-            int dtw_value = dtw(); // has to be executed here because path points are changed!
-            double endX = pathPoints.get(pathPoints.size()-1).getX() - pathPoints.get(0).getX();
-            double endY = pathPoints.get(pathPoints.size()-1).getY() - pathPoints.get(0).getX();
+            if (!gameController.gameUI.mmi_active) {
+                //execute dtw
+                int dtw_value = dtw(gestureDeclaration.gestureArray_angles);
+                double endX = pathPoints.get(pathPoints.size() - 1).getX() - pathPoints.get(0).getX();
+                double endY = pathPoints.get(pathPoints.size() - 1).getY() - pathPoints.get(0).getX();
 
-            //straight line identified
-            if(dtw_value == 0) {
-                if(Math.abs(endX) > Math.abs(endY)) {
-                    if(endX > 0) {
-                        debugText += "Middle right";
-                        gameController.gameUI.buttons[5].doClick();
-                    }else {
-                        debugText += "Middle left";
-                        gameController.gameUI.buttons[3].doClick();
-                    }
-                }else{
-                    if(endY > 0) {
-                        debugText += "Bottom middle";
-                        gameController.gameUI.buttons[7].doClick();
-                    }else {
-                        debugText += "Top middle";
-                        gameController.gameUI.buttons[1].doClick();
-                    }
-                }
-            }
-            //corner identified
-            if(dtw_value == 1) {
-                if(endX > 0){
-                    if(endY > 0){
-                        debugText += "Bottom right";
-                        gameController.gameUI.buttons[8].doClick();
-                    }else{
-                        debugText += "Top right";
-                        gameController.gameUI.buttons[2].doClick();
-                    }
-                }else{
-                    if(endY > 0){
-                        debugText +="Bottom left";
-                        gameController.gameUI.buttons[6].doClick();
-                    }else{
-                        debugText += "Top left";
-                        gameController.gameUI.buttons[0].doClick();
+                //straight line identified
+                if (dtw_value == 0) {
+                    if (Math.abs(endX) > Math.abs(endY)) {
+                        if (endX > 0) {
+                            debugText += "Middle right";
+                            gameController.gameUI.buttons[5].doClick();
+                        } else {
+                            debugText += "Middle left";
+                            gameController.gameUI.buttons[3].doClick();
+                        }
+                    } else {
+                        if (endY > 0) {
+                            debugText += "Bottom middle";
+                            gameController.gameUI.buttons[7].doClick();
+                        } else {
+                            debugText += "Top middle";
+                            gameController.gameUI.buttons[1].doClick();
+                        }
                     }
                 }
-            }
-            if(dtw_value == 2) {
-                debugText += "Center";
-                gameController.gameUI.buttons[4].doClick();
-            }
-            if(dtw_value == 3){
-                debugText += "Start new game";
-                gameController.gameUI.button_reset.doClick();
-            }
-            if(dtw_value == 4){
-                debugText += "Quit game";
-                gameController.gameUI.frame.dispose();
-                dispose();
+                //corner identified
+                if (dtw_value == 1) {
+                    if (endX > 0) {
+                        if (endY > 0) {
+                            debugText += "Bottom right";
+                            gameController.gameUI.buttons[8].doClick();
+                        } else {
+                            debugText += "Top right";
+                            gameController.gameUI.buttons[2].doClick();
+                        }
+                    } else {
+                        if (endY > 0) {
+                            debugText += "Bottom left";
+                            gameController.gameUI.buttons[6].doClick();
+                        } else {
+                            debugText += "Top left";
+                            gameController.gameUI.buttons[0].doClick();
+                        }
+                    }
+                }
+                if (dtw_value == 2) {
+                    debugText += "Center";
+                    gameController.gameUI.buttons[4].doClick();
+                }
+                if (dtw_value == 3) {
+                    debugText += "Start new game";
+                    gameController.gameUI.button_reset.doClick();
+                }
+                if (dtw_value == 4) {
+                    debugText += "Quit game";
+                    System.exit(0);
+                }
+            }else{
+                //mmi is active!
+                //execute dtw
+                int dtw_value = dtw(gestureDeclaration.gestureArray_angles_mmi);
+                double endX = pathPoints.get(pathPoints.size() - 1).getX() - pathPoints.get(0).getX();
+                double endY = pathPoints.get(pathPoints.size() - 1).getY() - pathPoints.get(0).getX();
+
+                //straight line identified
+                if (dtw_value == 0) {
+                    if (Math.abs(endX) > Math.abs(endY)) {
+                        if (endX > 0) {
+                            debugText += "Middle right";
+                            gameController.gameUI.mmiFrame.buttons[5].doClick();
+                        } else {
+                            debugText += "Middle left";
+                            gameController.gameUI.mmiFrame.buttons[3].doClick();
+                        }
+                    } else {
+                        if (endY > 0) {
+                            debugText += "Bottom middle";
+                            gameController.gameUI.mmiFrame.buttons[7].doClick();
+                        } else {
+                            debugText += "Top middle";
+                            gameController.gameUI.mmiFrame.buttons[1].doClick();
+                        }
+                    }
+                }
+                //corner identified
+                if (dtw_value == 1) {
+                    if (endX > 0) {
+                        if (endY > 0) {
+                            debugText += "Bottom right";
+                            gameController.gameUI.mmiFrame.buttons[8].doClick();
+                        } else {
+                            debugText += "Top right";
+                            gameController.gameUI.mmiFrame.buttons[2].doClick();
+                        }
+                    } else {
+                        if (endY > 0) {
+                            debugText += "Bottom left";
+                            gameController.gameUI.mmiFrame.buttons[6].doClick();
+                        } else {
+                            debugText += "Top left";
+                            gameController.gameUI.mmiFrame.buttons[0].doClick();
+                        }
+                    }
+                }
+                if (dtw_value == 2) {
+                    debugText += "Center";
+                    gameController.gameUI.mmiFrame.buttons[4].doClick();
+                }
+                if (dtw_value == 3) {
+                    debugText += "Start new game";
+                    gameController.gameUI.mmiFrame.button_newGame.doClick();
+                }
+                if (dtw_value == 4) {
+                    debugText += "Quit game";
+                    gameController.gameUI.mmiFrame.button_stop.doClick();
+                }
+                if (dtw_value == 5) {
+                    debugText += "Place";
+                    gameController.gameUI.mmiFrame.button_place.doClick();
+                }
+                if (dtw_value == 6) {
+                    debugText += "Action";
+                    gameController.gameUI.mmiFrame.button_action.doClick();
+                }
+                if (dtw_value == 7) {
+                    debugText += "x";
+                    gameController.gameUI.mmiFrame.button_x.doClick();
+                }
+                if (dtw_value == 8) {
+                    debugText += "o";
+                    gameController.gameUI.mmiFrame.button_o.doClick();
+                }
             }
         }
         label_debugText.setText(debugText);
@@ -205,13 +282,13 @@ public class GestureFrame extends JFrame implements MouseInputListener {
         //System.out.println("back");
     }
 
-    public int dtw(){
+    public int dtw(double [][] predefinedGestureArray){
 
         //DTW algorithm
 
         double[] currentPathX = new double[pathPoints.size()];
         double[] currentPathY = new double[pathPoints.size()];
-        double[] costAngles = new double[gestureDeclaration.gestureArray_angles.length];
+        double[] costAngles = new double[predefinedGestureArray.length];
 
         //remove duplicates
         for(int i= 1; i<pathPoints.size(); i++) {
@@ -241,15 +318,12 @@ public class GestureFrame extends JFrame implements MouseInputListener {
             double angle_c = Math.round((Math.acos((Math.pow(c,2)-(Math.pow(a,2))-Math.pow(b,2))/(-2*a*b)))*(180/3.14));
             double angle_b = (Math.acos((Math.pow(b,2)-(Math.pow(a,2))-Math.pow(c,2))/(-2*a*c)))*(180/3.14);
             double angle_a = (Math.acos((Math.pow(a,2)-(Math.pow(c,2))-Math.pow(b,2))/(-2*c*b)))*(180/3.14);
-            //System.out.println(angle_a);
-            //System.out.println(angle_b);
-            //System.out.println(angle_c);
             currentAngles[i]=angle_c;
             //System.out.print(angle_c + ", ");
         }
         //dtw algorithm for X values
-        for(int x=0; x<gestureDeclaration.gestureArray_angles.length; x++) {
-            double[] testAngles = gestureDeclaration.gestureArray_angles[x];
+        for(int x=0; x<predefinedGestureArray.length; x++) {
+            double[] testAngles = predefinedGestureArray[x];
 
             int n = currentAngles.length;
             int m = testAngles.length;

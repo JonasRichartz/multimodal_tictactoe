@@ -5,7 +5,8 @@ public class Main {
 
         GameController gameController = new GameController();
         GestureFrame gestureFrame = new GestureFrame(gameController);
-        GameUI gameUI = new GameUI( gameController, gestureFrame );
+        MmiFrame mmiFrame = new MmiFrame(gameController);
+        GameUI gameUI = new GameUI(gameController, gestureFrame, mmiFrame);
         gameController.setGameUI(gameUI);
         gameController.firstTurn();
     }
