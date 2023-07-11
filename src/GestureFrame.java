@@ -38,7 +38,7 @@ public class GestureFrame extends JFrame implements MouseInputListener {
 
         //frame
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setTitle("Mouse Gesture Drawing");
+        setTitle("Gesture-Input");
         setSize(400,400);
         setLayout(new BorderLayout());
         setIconImage(icon_frame.getImage());

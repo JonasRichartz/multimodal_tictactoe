@@ -42,16 +42,14 @@ public class MmiFrame extends JFrame implements ActionListener {
 
         //define variables for UI use
         ImageIcon icon_frame = new ImageIcon("src/Icons/icons8-tic-tac-toe-48.png");
+        ImageIcon icon_stop = new ImageIcon("src/Icons/icons8-stop-48.png");
+        ImageIcon icon_newGame = new ImageIcon("src/Icons/icons8-memories-48.png");
 
         JPanel panel_north = new JPanel();
         JPanel panel_south = new JPanel();
         JPanel panel_east = new JPanel();
         JPanel panel_west = new JPanel();
         JPanel panel_center = new JPanel();
-        JPanel panel_northUp = new JPanel();
-        JPanel panel_northDown = new JPanel();
-        JPanel panel_southUp = new JPanel();
-        JPanel panel_southDown = new JPanel();
 
         custom_lightBlue = new Color(180,200,220); // color for background
         custom_lightGray = new Color (225,225,225); //color  for button
@@ -75,33 +73,17 @@ public class MmiFrame extends JFrame implements ActionListener {
         panel_west.setBackground(custom_lightBlue);
         panel_center.setBackground(Color.BLACK);
 
-        panel_north.setPreferredSize(new Dimension(400,80));
-        panel_south.setPreferredSize(new Dimension(400,80));
-        panel_east.setPreferredSize(new Dimension(80,100));
-        panel_west.setPreferredSize(new Dimension(80,100));
-        panel_center.setPreferredSize(new Dimension(240,240));
+        panel_north.setPreferredSize(new Dimension(400,60));
+        panel_south.setPreferredSize(new Dimension(400,60));
+        panel_east.setPreferredSize(new Dimension(60,400));
+        panel_west.setPreferredSize(new Dimension(60,400));
+        panel_center.setPreferredSize(new Dimension(280,280));
 
-        panel_center.setLayout(new GridLayout(3,3,2,2));
-        panel_north.setLayout(new GridLayout(2,1));
-        panel_south.setLayout(new GridLayout(2,1));
+        panel_center.setLayout(new GridLayout(3,3,3,3));
+        panel_north.setLayout(new FlowLayout());
+        panel_south.setLayout(new FlowLayout());
 
-        panel_center.setBorder(new LineBorder(Color.BLACK, 2, false));
-
-        //sub-panels
-        panel_northUp.setBackground(custom_lightBlue);
-        panel_northDown.setBackground(custom_lightBlue);
-        panel_southUp.setBackground(custom_lightBlue);
-        panel_southDown.setBackground(custom_lightBlue);
-
-        panel_northUp.setPreferredSize(new Dimension(400, 20));
-        panel_northDown.setPreferredSize(new Dimension(400,20));
-        panel_southUp.setPreferredSize(new Dimension(400,20));
-        panel_southDown.setPreferredSize(new Dimension(400,20));
-
-        panel_northUp.setLayout(new GridBagLayout());
-        panel_northDown.setLayout(new GridBagLayout());
-        panel_southUp.setLayout(new GridBagLayout());
-        panel_southDown.setLayout(new GridBagLayout());
+        panel_center.setBorder(new LineBorder(Color.BLACK, 3, false));
 
         //buttons
         button_place = new JButton();
@@ -115,7 +97,7 @@ public class MmiFrame extends JFrame implements ActionListener {
         for(int i=0;i<9;i++) {
             buttons[i] = new JButton();
             panel_center.add(buttons[i]);
-            buttons[i].setFont(new Font("Comic Sans MS", Font.BOLD, 10));
+            buttons[i].setFont(new Font("Comic Sans MS", Font.BOLD, 20));
             buttons[i].setBackground(Color.WHITE);
             buttons[i].setFocusable(false);
             buttons[i].addActionListener(this);
@@ -123,17 +105,17 @@ public class MmiFrame extends JFrame implements ActionListener {
             buttons[i].setEnabled(false);
         }
 
-        buttons[0].setText("Top Left");
-        buttons[1].setText("Top Middle");
-        buttons[2].setText("Top Right");
-        buttons[3].setText("Middle Left");
-        buttons[4].setText("Center");
-        buttons[5].setText("Middle Right");
-        buttons[6].setText("Bottom Left");
-        buttons[7].setText("Bottom Middle");
-        buttons[8].setText("Bottom Right");
+        buttons[0].setText("<html><center>Top<br />Left</center></html>");
+        buttons[1].setText("<html><center>Top<br />Middle</center></html>");
+        buttons[2].setText("<html><center>Top<br />Right</center></html>");
+        buttons[3].setText("<html><center>Middle<br />Left</center></html>");
+        buttons[4].setText("<html><center>Center</center></html>");
+        buttons[5].setText("<html><center>Middle<br />Left</center></html>");
+        buttons[6].setText("<html><center>Bottom<br />Left</center></html>");
+        buttons[7].setText("<html><center>Bottom<br />Middle</center></html>");
+        buttons[8].setText("<html><center>Bottom<br />Right</center></html>");
 
-        button_place.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        button_place.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
         button_place.setText("Place");
         button_place.setBackground(custom_lightGray);
         button_place.setForeground(Color.BLACK);
@@ -141,11 +123,11 @@ public class MmiFrame extends JFrame implements ActionListener {
         button_place.setHorizontalAlignment(SwingConstants.CENTER);
         button_place.setVerticalAlignment(SwingConstants.CENTER);
         button_place.addActionListener(this);
-        button_place.setPreferredSize(new Dimension(200,75));
-        button_place.setBorder(new LineBorder(Color.BLACK, 2, false));
+        button_place.setPreferredSize(new Dimension(100,50));
+        button_place.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_place.setEnabled(true);
 
-        button_x.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        button_x.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
         button_x.setText("X");
         button_x.setBackground(custom_lightGray);
         button_x.setForeground(Color.BLACK);
@@ -153,11 +135,11 @@ public class MmiFrame extends JFrame implements ActionListener {
         button_x.setHorizontalAlignment(SwingConstants.CENTER);
         button_x.setVerticalAlignment(SwingConstants.CENTER);
         button_x.addActionListener(this);
-        button_x.setPreferredSize(new Dimension(200,75));
-        button_x.setBorder(new LineBorder(Color.BLACK, 2, false));
+        button_x.setPreferredSize(new Dimension(50,50));
+        button_x.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_x.setEnabled(false);
 
-        button_o.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        button_o.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
         button_o.setText("O");
         button_o.setBackground(custom_lightGray);
         button_o.setForeground(Color.BLACK);
@@ -165,11 +147,11 @@ public class MmiFrame extends JFrame implements ActionListener {
         button_o.setHorizontalAlignment(SwingConstants.CENTER);
         button_o.setVerticalAlignment(SwingConstants.CENTER);
         button_o.addActionListener(this);
-        button_o.setPreferredSize(new Dimension(200,75));
-        button_o.setBorder(new LineBorder(Color.BLACK, 2, false));
+        button_o.setPreferredSize(new Dimension(50,50));
+        button_o.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_o.setEnabled(false);
 
-        button_action.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
+        button_action.setFont(new Font("Comic Sans MS", Font.BOLD, 30));
         button_action.setText("Action");
         button_action.setBackground(custom_lightGray);
         button_action.setForeground(Color.BLACK);
@@ -177,47 +159,40 @@ public class MmiFrame extends JFrame implements ActionListener {
         button_action.setHorizontalAlignment(SwingConstants.CENTER);
         button_action.setVerticalAlignment(SwingConstants.CENTER);
         button_action.addActionListener(this);
-        button_action.setPreferredSize(new Dimension(200,75));
-        button_action.setBorder(new LineBorder(Color.BLACK, 2, false));
+        button_action.setPreferredSize(new Dimension(100,50));
+        button_action.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_action.setEnabled(true);
 
-        button_newGame.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
-        button_newGame.setText("New Game");
         button_newGame.setBackground(custom_lightGray);
         button_newGame.setForeground(Color.BLACK);
         button_newGame.setFocusable(false);
         button_newGame.setHorizontalAlignment(SwingConstants.CENTER);
         button_newGame.setVerticalAlignment(SwingConstants.CENTER);
         button_newGame.addActionListener(this);
-        button_newGame.setPreferredSize(new Dimension(200,75));
-        button_newGame.setBorder(new LineBorder(Color.BLACK, 2, false));
+        button_newGame.setPreferredSize(new Dimension(50,50));
+        button_newGame.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_newGame.setEnabled(false);
+        button_newGame.setIcon(icon_newGame);
 
-        button_stop.setFont(new Font("Comic Sans MS", Font.BOLD, 15));
-        button_stop.setText("Stop");
         button_stop.setBackground(custom_lightGray);
         button_stop.setForeground(Color.BLACK);
         button_stop.setFocusable(false);
         button_stop.setHorizontalAlignment(SwingConstants.CENTER);
         button_stop.setVerticalAlignment(SwingConstants.CENTER);
         button_stop.addActionListener(this);
-        button_stop.setPreferredSize(new Dimension(200,75));
-        button_stop.setBorder(new LineBorder(Color.BLACK, 2, false));
+        button_stop.setPreferredSize(new Dimension(50,50));
+        button_stop.setBorder(new LineBorder(Color.BLACK, 3, false));
         button_stop.setEnabled(false);
+        button_stop.setIcon(icon_stop);
 
         //add buttons to panels
-        panel_northUp.add(button_place, new GridBagConstraints());
-        panel_northDown.add(button_x, new GridBagConstraints());
-        panel_northDown.add (button_o, new GridBagConstraints());
-        panel_southUp.add(button_action, new GridBagConstraints());
-        panel_southDown.add(button_newGame, new GridBagConstraints());
-        panel_southDown.add(button_stop, new GridBagConstraints());
 
-        //add sub-panels to main-panels
-        panel_north.add(panel_northUp);
-        panel_north.add(panel_northDown);
-        panel_south.add(panel_southUp);
-        panel_south.add(panel_southDown);
+        panel_north.add(button_place);
+        panel_north.add(button_x);
+        panel_north.add(button_o);
+        panel_south.add(button_action);
+        panel_south.add(button_newGame);
+        panel_south.add(button_stop);
 
         //add panels to frame
         add(panel_north,BorderLayout.NORTH);
